@@ -1,0 +1,14 @@
+
+/env
+/venv
+
+*.pyc
+staticfiles
+
+/.vagrant
+
+/.env
+
+/bookwork/local_settings.py
+
+/staticfiles
