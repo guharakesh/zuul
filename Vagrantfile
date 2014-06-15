@@ -14,12 +14,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.synced_folder "salt/roots/", "/srv/salt"
 
-  config.vm.provision :salt do |salt|
+  config.vm.provision :shell, :path => "node-bootstrap.sh"
+  config.vm.network :private_network, ip: '10.0.33.34'
 
-    salt.minion_config = "salt/minion"
-    salt.run_highstate = true
-
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+    vb.customize ["modifyvm", :id, "--memory", "512"]
   end
-
 
 end
