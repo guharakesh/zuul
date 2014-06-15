@@ -11,9 +11,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "hashicorp/precise64"
-  
-  config.vm.synced_folder "salt/roots/", "/srv/salt"
 
+  config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa' ]
+  config.ssh.forward_agent = true
+  
   config.vm.provision :shell, :path => "node-bootstrap.sh"
   config.vm.network :private_network, ip: '10.0.33.34'
 

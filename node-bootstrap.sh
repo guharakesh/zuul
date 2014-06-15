@@ -17,14 +17,12 @@ then
   add-apt-repository -y ppa:chris-lea/node.js
   apt-get -y update
 
-  apt-get installl -y nodejs
+  apt-get install -y nodejs
 
   apt-get install -y mongodb-10gen
 
   ln -s /vagrant/www /var/www
 
   echo "Your default node server should now be listening on http://10.0.33.34/. For code, see: node-mongo-vagrant/www/default/server.js."
-
-  node /var/www/default/server.js
 
 fi
