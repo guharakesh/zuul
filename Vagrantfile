@@ -12,15 +12,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "hashicorp/precise64"
 
-  config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa' ]
-  config.ssh.forward_agent = true
   
   config.vm.provision :shell, :path => "node-bootstrap.sh"
   config.vm.network :private_network, ip: '10.0.33.34'
 
+  config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa' ] 
+  config.ssh.forward_agent = true
+
+  config.vm.synced_folder "salt/roots/", "/srv/"
+
   config.vm.provider :virtualbox do |vb|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
-    vb.customize ["modifyvm", :id, "--memory", "512"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  end
+
+  config.vm.define "bookwork" do |bookwork|
+    bookwork.vm.network "forwarded_port", guest: 5000, host: 5000
+
+    bookwork.vm.provision :salt do |s|
+      s.verbose = true
+      s.minion_config = "provisioning/salt/bookwork-minion"
+      s.run_highstate = true
+    end
   end
 
 end
