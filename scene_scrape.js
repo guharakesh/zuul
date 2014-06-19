@@ -41,10 +41,25 @@ function imgur_post(image_url) {
 	});
 }
 
-function upload(file, callback) {
+var loadBase64Image = function(url, callback) {
+	var request = require('request');
+
+	request({url: url, encoding: null}, function(err, res, body) {
+		if (!err && res.statusCode == 200) {
+			var base64prefix = 'data:' + res.headers['content-type'] + ';base64,', image = body.toString('base64');
+			if (typeof callback == 'function') {
+				callback(image, base64prefix);
+			}
+		} else {
+			throw new Error('Can not download image');
+		}
+	});
+}
+
+function upload(image, prefix) {
 	var fd = new FormData();
 
-	fd.append('image', file);
+	fd.append('image', image);
 
 	var options = {
 		headers: {
@@ -71,9 +86,11 @@ function upload(file, callback) {
 
 
 url = 'http://www.clevescene.com/imager/the-lights-of-downtown-cleveland-reflected/b/slideshow/4326741/f5c7/s-1.jpg';
-upload(url, function(response) {
-	console.log(response);
-});
+
+loadBase64Image(url, upload());
+// upload(url, function(response) {
+	// console.log(response);
+// });
 
 module.exports = cleve_url;
 module.exports = imgur_post;
