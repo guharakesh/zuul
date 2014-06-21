@@ -21,6 +21,8 @@ then
 
   apt-get install -y mongodb-10gen
 
+  npm install -g mocha
+
   ln -s /vagrant/www /var/www
 
   echo "Your default node server should now be listening on http://10.0.33.34/. For code, see: node-mongo-vagrant/www/default/server.js."
