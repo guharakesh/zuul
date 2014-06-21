@@ -8,7 +8,7 @@ describe("Imgur", function() {
 			var url = 'http://www.clevescene.com/imager/the-lights-of-downtown-cleveland-reflected/b/slideshow/4326741/f5c7/s-1.jpg';
 			
 			imgur.upload(url,function(results) {
-				expect(results).to.match(/^http:\/\/imgur\.com\/[a-zA-Z0-9]{7}$/);
+				expect(results).to.match(/^http:\/\/i\.imgur\.com\/[a-zA-Z0-9]{7}\.jpg$/);
 				// expect(results).to.be.a('string');
 				done();
 			});
