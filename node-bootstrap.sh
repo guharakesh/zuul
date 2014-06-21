@@ -23,6 +23,12 @@ then
 
   ln -s /vagrant/www /var/www
 
+  # Allow global install of npm modules
+  mkdir /usr/lib/node_modules/
+  sudo chown -R vagrant:vagrant /usr/lib/node_modules/
+
+  sudo npm install -g mocha sails node-inspector
+
   echo "Your default node server should now be listening on http://10.0.33.34/. For code, see: node-mongo-vagrant/www/default/server.js."
 
 fi

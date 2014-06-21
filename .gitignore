@@ -1,1 +1,5 @@
+# Vagrant generated files specific to each machine
 .vagrant*
+
+# npm log file
+npm-debug.log
