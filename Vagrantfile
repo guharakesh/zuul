@@ -22,6 +22,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, guest: 35729, host: 35729
   config.vm.network :forwarded_port, guest: 27017, host: 27017
   config.vm.network :forwarded_port, guest: 8080, host: 8080
+  #default sails port
+  config.vm.network :forwarded_port, guest: 1337, host: 1337
 
   config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa' ] 
   config.ssh.forward_agent = true
