@@ -75,26 +75,54 @@ module.exports = {
 					req.session.authenticated = true;
 					req.session.User = user;
 
-					if(req.session.User.admin){
-						res.redirect('/user');
-						return;
-					}
+					user.online = true;
+					user.save(function(err,user){
+						if (err) return next(err);
+						
+						// Inform other sockets (e.g. connected sockets that are subscribed) that the user is now logged in
+						User.publishUpdate(user.id,{
+							loggedIn : true,
+							id       : user.id
+						});
 
-					//Redirect to their profile page (e.g. /views/user/show.ejs)
-					res.redirect('/user/show/' + user.id);				
+						if(req.session.User.admin){
+							res.redirect('/user');
+							return;
+						}
+
+						//Redirect to their profile page (e.g. /views/user/show.ejs)
+						res.redirect('/user/show/' + user.id);				
+					});
 				});
 			});
 		},
 
 		destroy: function(req, res, next) {
 
-				// Wipe out the session (log out)
-				req.session.destroy();
+				User.findOne(req.session.User.id, function foundUser (err, user) {
 
-				// Redirect the browser to the sign-in screen
-				res.redirect('/session/new');
-				
-		},
+					var userId = req.session.User.id;
+
+					// The user is "logging out" (e.g. destroying the session) so change the online attribute to false.
+					User.update(userId, {
+						online: false
+					}, function (err) {
+						if (err) return next(err);
+
+						// Inform other sockets (e.g. connected sockets that are subscribed) that the user is now logged out
+						User.publishUpdate(user.id,{
+							loggedIn : false,
+							id       : user.id
+						});
+
+						// Wipe out the session (log out)
+						req.session.destroy();
+
+						// Redirect the browser to the sign-in screen
+						res.redirect('/session/new');
+					});
+				});
+			},
 
 	/**
 	 * Overrides for the settings in `config/controllers.js`

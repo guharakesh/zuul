@@ -27,6 +27,10 @@ module.exports = {
 			required: true,
 			unique: true
 		},
+		online: {
+			type: 'boolean',
+			defaultsTo: false
+		},
 		admin: {
 			type: 'boolean',
 			defaultsTo: false
@@ -55,7 +59,7 @@ module.exports = {
 	  }
 	   next();
 	},
-	
+
 	beforeCreate: function (values, next) {
 		console.log("hit before create");
 		// This checks to make sure the password and password confirmation match before creating record
