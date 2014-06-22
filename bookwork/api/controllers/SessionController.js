@@ -82,7 +82,9 @@ module.exports = {
 						// Inform other sockets (e.g. connected sockets that are subscribed) that the user is now logged in
 						User.publishUpdate(user.id,{
 							loggedIn : true,
-							id       : user.id
+							id       : user.id,
+							name     : user.first_name + ' ' + user.last_name,
+							action   : ' has logged in.'
 						});
 
 						if(req.session.User.admin){
@@ -112,7 +114,9 @@ module.exports = {
 						// Inform other sockets (e.g. connected sockets that are subscribed) that the user is now logged out
 						User.publishUpdate(user.id,{
 							loggedIn : false,
-							id       : user.id
+							id       : user.id,
+							name     : user.first_name + ' ' + user.last_name,
+							action   : ' has logged out.'
 						});
 
 						// Wipe out the session (log out)

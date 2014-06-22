@@ -23,8 +23,8 @@ module.exports = {
 	create: function (req, res, next) {
 
 		var userObj = {
-			name: req.param('name'),
-			title: req.param('title'),
+			first_name: req.param('first_name'),
+			last_name: req.param('last_name'),
 			email: req.param('email'),
 			password: req.param('password'),
 			confirmation: req.param('confirmation')
@@ -53,6 +53,11 @@ module.exports = {
 				user.online = true;
 				user.save(function(err,user){
 					if(err) return next(err);
+
+					user.action = " signed-up and logged-in.",
+					user.name = user.first_name + ' ' + user.last_name;
+					// Let other subscribed sockets know that the user was created.
+					User.publishCreate(user);
 
 					// After successfully creating the user
 					// redirect to the show action
@@ -115,7 +120,8 @@ module.exports = {
 				  }
 				}
 
-				User.update(req.param('id'), userObj, function userUpdated (err) {					if (err) {
+				User.update(req.param('id'), userObj, function userUpdated (err) {
+					if (err) {
 						return res.redirect('/user/edit/' + req.param('id'));
 					}
 
@@ -124,8 +130,7 @@ module.exports = {
 			},
 
 			destroy: function (req, res, next) {
-
-					User.findOne(req.param('id'), function foundUser (err, user) {
+				User.findOne(req.param('id'), function foundUser (err, user) {
 						if (err) return next(err);
 
 						if (!user) return next('User doesn\'t exist.');
@@ -133,28 +138,34 @@ module.exports = {
 						User.destroy(req.param('id'), function userDestroyed(err) {
 							if (err) return next(err);
 
+							User.publishUpdate(user.id,{
+								name : user.first_name + ' ' + user.last_name,
+								action : ' has been destroyed.'
+							});
+
+							// Let other subscribed sockets knot that the user was deleted
+							User.publishDestroy(user.id);
 						});
 
-						res.redirect('/user');  
-						
-					});
-				},
+					res.redirect('/user');  
+				});
+			},
 
-				subscribe: function(req,res){
-					User.find(function foundUsers(err, users){
-						if (err) return next(err);
-						//subscript this socket to the User model class room
-						User.subscribe(req.socket);
-						
-						// subscribe this socke to the user instance room
-						User.subscribe(req.socket, users);
-						console.log("subscribed")
-						// This iwll avoid a warning from the socket for trying to render
-						// html over the socket
-						res.send(200);
+			subscribe: function(req,res){
+				User.find(function foundUsers(err, users){
+					if (err) return next(err);
+					//subscript this socket to the User model class room
+					User.subscribe(req.socket);
+					
+					// subscribe this socke to the user instance room
+					User.subscribe(req.socket, users);
+					console.log("subscribed")
+					// This iwll avoid a warning from the socket for trying to render
+					// html over the socket
+					res.send(200);
 
-					});
-				},
+				});
+			},
 
 	/**
 	 * Overrides for the settings in `config/controllers.js`
