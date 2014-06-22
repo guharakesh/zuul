@@ -32,14 +32,28 @@ module.exports = {
 			type: 'string'
 		},
 		
-		// toJSON: function() {
-		// 	var obj = this.toObject();
-		// 	delete obj.password;
-		// 	delete obj.confirmation;
-		// 	delete obj.encryptedPassword;
-		// 	delete obj._csrf;
-		// 	return obj;
-		// }
+		toJSON: function() {
+			var obj = this.toObject();
+			delete obj.password;
+			delete obj.confirmation;
+			delete obj.encryptedPassword;
+			delete obj._csrf;
+			return obj;
+		},
+	},
+
+	beforeCreate: function (values, next) {
+		console.log("hit before create");
+		// This checks to make sure the password and password confirmation match before creating record
+		if (!values.password || values.password != values.confirmation) {
+			return next({err: ["Password doesn't match password confirmation."]});
+		}
+		console.log("passwords must match");
+		require('bcrypt').hash(values.password, 10, function passwordEncrypted(err, encryptedPassword) {
+			if (err) return next(err);
+			values.encryptedPassword = encryptedPassword;
+			next();
+		});
 	}
 
 };
