@@ -104,27 +104,34 @@ module.exports = {
 				User.findOne(req.session.User.id, function foundUser (err, user) {
 
 					var userId = req.session.User.id;
+					if(user){
+						// The user is "logging out" (e.g. destroying the session) so change the online attribute to false.
+						User.update(userId, {
+							online: false
+						}, function (err) {
+							if (err) return next(err);
 
-					// The user is "logging out" (e.g. destroying the session) so change the online attribute to false.
-					User.update(userId, {
-						online: false
-					}, function (err) {
-						if (err) return next(err);
+							// Inform other sockets (e.g. connected sockets that are subscribed) that the user is now logged out
+							User.publishUpdate(user.id,{
+								loggedIn : false,
+								id       : user.id,
+								name     : user.first_name + ' ' + user.last_name,
+								action   : ' has logged out.'
+							});
 
-						// Inform other sockets (e.g. connected sockets that are subscribed) that the user is now logged out
-						User.publishUpdate(user.id,{
-							loggedIn : false,
-							id       : user.id,
-							name     : user.first_name + ' ' + user.last_name,
-							action   : ' has logged out.'
+							// Wipe out the session (log out)
+							req.session.destroy();
+
+							// Redirect the browser to the sign-in screen
+							res.redirect('/session/new');
 						});
-
+					} else {
 						// Wipe out the session (log out)
 						req.session.destroy();
 
 						// Redirect the browser to the sign-in screen
 						res.redirect('/session/new');
-					});
+					}
 				});
 			},
 

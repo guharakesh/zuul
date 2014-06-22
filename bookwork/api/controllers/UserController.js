@@ -72,7 +72,8 @@ module.exports = {
 					if (err) return next(err);
 					if (!user) return next();
 					res.view({
-						user: user
+						user: user,
+						profile:"active"
 					});
 				});
 			},
@@ -84,7 +85,8 @@ module.exports = {
 					if (err) return next(err);
 					// pass the array down to the /views/index.ejs page
 					res.view({
-						users: users
+						users: users,
+						admin:"active"
 					});
 				});
 			},
