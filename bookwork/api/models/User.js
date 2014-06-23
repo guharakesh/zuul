@@ -35,6 +35,12 @@ module.exports = {
 			type: 'boolean',
 			defaultsTo: false
 		},
+		type: {
+			type: 'string'
+		},
+		typeId: {
+			type: 'string'
+		},
 		encryptedPassword: {
 			type: 'string'
 		},
@@ -53,7 +59,7 @@ module.exports = {
 	  if (typeof values.admin !== 'undefined') {
 	    if (values.admin === 'unchecked') {
 	      values.admin = false;
-	    } else  if (values.admin[1] === 'on') {
+	    } else if (values.admin[1] === 'on') {
 	      values.admin = true;
 	    }
 	  }

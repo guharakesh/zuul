@@ -26,6 +26,9 @@ module.exports.policies = {
 		'edit'      : 'userCanSeeProfile',
 		'update'    : 'userCanSeeProfile',
 		'*'         : 'isAuthenticated'
+	},
+	student:{
+		// 'create'    : 'isAuthenticated',
 	}
 
 	/*

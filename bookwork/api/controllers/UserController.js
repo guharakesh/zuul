@@ -17,157 +17,154 @@
 
 module.exports = {
 		
-	'new': function (req, res) {
+	new: function (req, res) {
 		res.view();
 	},
 	create: function (req, res, next) {
-
 		var userObj = {
 			first_name: req.param('first_name'),
 			last_name: req.param('last_name'),
 			email: req.param('email'),
 			password: req.param('password'),
 			confirmation: req.param('confirmation')
-		 } 
+		}
 
-			// Create a User with the params sent from 
-			// the sign-up form --> new.ejs
-			 User.create( userObj, function userCreated (err, user) {
-				// // If there's an error
-				// if (err) return next(err);
+		// Create a User with the params sent from 
+		// the sign-up form --> new.ejs
+		User.create(userObj, function userCreated (err, user) {
+			// // If there's an error
+			// if (err) return next(err);
 
-				if (err) {
-					// console.log(err);
-					req.session.flash = {
-						err: err
-					}
-
-					// If error redirect back to sign-up page
-					return res.redirect('/user/new');
+			if (err) {
+				// console.log(err);
+				req.session.flash = {
+					err: err
 				}
 
-				// Log user in
-				req.session.authenticated = true;
-				req.session.User = user;
+				// If error redirect back to sign-up page
+				return res.redirect('/user/new');
+			}
 
-				user.online = true;
-				user.save(function(err,user){
-					if(err) return next(err);
+			// Log user in
+			req.session.authenticated = true;
+			req.session.User = user;
 
-					user.action = " signed-up and logged-in.",
-					user.name = user.first_name + ' ' + user.last_name;
-					// Let other subscribed sockets know that the user was created.
-					User.publishCreate(user);
+			user.online = true;
+			user.save(function(err,user){
+				if(err) return next(err);
 
-					// After successfully creating the user
-					// redirect to the show action
-					// res.json(user); 
-					res.redirect('/user/show/'+user.id);
-				});
+				user.action = " signed-up and logged-in.",
+				user.name = user.first_name + ' ' + user.last_name;
+				// Let other subscribed sockets know that the user was created.
+				User.publishCreate(user);
+
+				// After successfully creating the user
+				// redirect to the show action
+				// res.json(user); 
+				res.redirect('/user/show/'+user.id);
 			});
-		},
+		});
+	},
 
-		show: function (req, res, next) {
-				User.findOne(req.param('id'), function foundUser (err, user) {
+	show: function (req, res, next) {
+		User.findOne(req.param('id'), function foundUser (err, user) {
+			if (err) return next(err);
+			if (!user) return next();
+			res.view({
+				user: user,
+				profile:"active"
+			});
+		});
+	},
+
+	index: function (req, res, next) {
+		// Get an array of all users in the User collection(e.g. table)
+		User.find(function foundUsers (err, users) {
+			if (err) return next(err);
+			// pass the array down to the /views/index.ejs page
+			res.view({
+				users: users,
+				admin:"active"
+			});
+		});
+	},
+
+	// render the edit view (e.g. /views/edit.ejs)
+	edit: function (req, res, next) {
+
+		// Find the user from the id passed in via params
+		User.findOne(req.param('id'), function foundUser (err, user) {
+			if (err) return next(err);
+			if (!user) return next('User doesn\'t exist.');
+			
+			res.view({
+				user: user
+			});
+		});
+	},
+
+	// process the info from edit view
+	update: function (req, res, next) {
+		if(req.session.User.admin) {
+		  var userObj = {
+		    name: req.param('name'),
+		    title: req.param('title'),
+		    email: req.param('email'),
+		    admin: req.param('admin')
+		  }
+		} else {
+		  var userObj = {
+		    name: req.param('name'),
+		    title: req.param('title'),
+		    email: req.param('email')
+		  }
+		}
+
+		User.update(req.param('id'), userObj, function userUpdated (err) {
+			if (err) {
+				return res.redirect('/user/edit/' + req.param('id'));
+			}
+
+			res.redirect('/user/show/' + req.param('id'));
+		});
+	},
+
+	destroy: function (req, res, next) {
+		User.findOne(req.param('id'), function foundUser (err, user) {
+				if (err) return next(err);
+
+				if (!user) return next('User doesn\'t exist.');
+
+				User.destroy(req.param('id'), function userDestroyed(err) {
 					if (err) return next(err);
-					if (!user) return next();
-					res.view({
-						user: user,
-						profile:"active"
+
+					User.publishUpdate(user.id,{
+						name : user.first_name + ' ' + user.last_name,
+						action : ' has been destroyed.'
 					});
+
+					// Let other subscribed sockets knot that the user was deleted
+					User.publishDestroy(user.id);
 				});
-			},
 
-		index: function (req, res, next) {
+			res.redirect('/user');  
+		});
+	},
 
-				// Get an array of all users in the User collection(e.g. table)
-				User.find(function foundUsers (err, users) {
-					if (err) return next(err);
-					// pass the array down to the /views/index.ejs page
-					res.view({
-						users: users,
-						admin:"active"
-					});
-				});
-			},
+	subscribe: function(req,res){
+		User.find(function foundUsers(err, users){
+			if (err) return next(err);
+			//subscript this socket to the User model class room
+			User.subscribe(req.socket);
+			
+			// subscribe this socke to the user instance room
+			User.subscribe(req.socket, users);
+			// This iwll avoid a warning from the socket for trying to render
+			// html over the socket
+			res.send(200);
 
-			// render the edit view (e.g. /views/edit.ejs)
-			edit: function (req, res, next) {
-
-				// Find the user from the id passed in via params
-				User.findOne(req.param('id'), function foundUser (err, user) {
-					if (err) return next(err);
-					if (!user) return next('User doesn\'t exist.');
-					
-					res.view({
-						user: user
-					});
-				});
-			},
-
-			// process the info from edit view
-			update: function (req, res, next) {
-				if(req.session.User.admin) {
-				  var userObj = {
-				    name: req.param('name'),
-				    title: req.param('title'),
-				    email: req.param('email'),
-				    admin: req.param('admin')
-				  }
-				} else {
-				  var userObj = {
-				    name: req.param('name'),
-				    title: req.param('title'),
-				    email: req.param('email')
-				  }
-				}
-
-				User.update(req.param('id'), userObj, function userUpdated (err) {
-					if (err) {
-						return res.redirect('/user/edit/' + req.param('id'));
-					}
-
-					res.redirect('/user/show/' + req.param('id'));
-				});
-			},
-
-			destroy: function (req, res, next) {
-				User.findOne(req.param('id'), function foundUser (err, user) {
-						if (err) return next(err);
-
-						if (!user) return next('User doesn\'t exist.');
-
-						User.destroy(req.param('id'), function userDestroyed(err) {
-							if (err) return next(err);
-
-							User.publishUpdate(user.id,{
-								name : user.first_name + ' ' + user.last_name,
-								action : ' has been destroyed.'
-							});
-
-							// Let other subscribed sockets knot that the user was deleted
-							User.publishDestroy(user.id);
-						});
-
-					res.redirect('/user');  
-				});
-			},
-
-			subscribe: function(req,res){
-				User.find(function foundUsers(err, users){
-					if (err) return next(err);
-					//subscript this socket to the User model class room
-					User.subscribe(req.socket);
-					
-					// subscribe this socke to the user instance room
-					User.subscribe(req.socket, users);
-					console.log("subscribed")
-					// This iwll avoid a warning from the socket for trying to render
-					// html over the socket
-					res.send(200);
-
-				});
-			},
+		});
+	},
 
 	/**
 	 * Overrides for the settings in `config/controllers.js`
