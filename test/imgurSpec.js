@@ -9,10 +9,8 @@ describe("Imgur", function() {
 			
 			imgur.upload(url,function(results) {
 				expect(results).to.match(/^http:\/\/i\.imgur\.com\/[a-zA-Z0-9]{7}\.jpg$/);
-				// expect(results).to.be.a('string');
 				done();
 			});
-
-			});
+		});
 	});	
 });

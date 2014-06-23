@@ -22,6 +22,8 @@ then
   apt-get install -y mongodb-10gen
 
   npm install -g mocha
+  npm install -g sails
+  npm install -g node-inspector
 
   ln -s /vagrant/www /var/www
 

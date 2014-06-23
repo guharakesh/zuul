@@ -2,27 +2,37 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
+inoremap <expr> <Down> pumvisible() ? "\" : "\<Down>"
+inoremap <expr> <S-Tab> pumvisible() ? "\" : "\<S-Tab>"
+inoremap <expr> <Up> pumvisible() ? "\" : "\<Up>"
+inoremap <Nul> 
+inoremap <silent> <expr> <Plug>delimitMateS-BS delimitMate#WithinEmptyPair() ? "\<Del>" : "\<S-BS>"
+inoremap <silent> <Plug>delimitMateBS =delimitMate#BS()
+nnoremap \d :YcmShowDetailedDiagnostic
 nmap gx <Plug>NetrwBrowseX
 vnoremap <silent> <F9> :call conque_term#send_selected(visualmode())
 nnoremap <silent> <F10> :call conque_term#send_file()
 nnoremap <F8> :call conque_term#set_mappings("toggle")
-nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
+nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cfile>"),0)
 nnoremap <silent> <F11> :call conque_term#exec_file()
+imap  O
+inoremap <expr> 	 pumvisible() ? "\" : "\	"
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set background=dark
-set backspace=indent,eol,start
+set backspace=2
+set balloonexpr=SyntasticBalloonsExprNotifier()
+set completefunc=youcompleteme#Complete
+set completeopt=menuone
+set cpoptions=aAceFsB
 set helplang=en
-set history=50
-set nomodeline
-set omnifunc=javascriptcomplete#CompleteJS
-set ruler
-set runtimepath=~/.vim,~/.vim/bundle/syntastic,~/.vim/bundle/vim-javascript,~/.vim/bundle/vim-javascript-syntax,/var/lib/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/var/lib/vim/addons/after,~/.vim/after
+set omnifunc=syntaxcomplete#Complete
+set runtimepath=~/.vim,~/.vim/bundle/vim-javascript-syntax,~/.vim/bundle/vim-javascript,~/.vim/bundle/delimitMate,~/.vim/bundle/syntastic,~/.vim/bundle/YouCompleteMe,~/.vim/bundle/tern_for_vim,/usr/share/vim/vim74a/vimfiles,/usr/share/vim/vim74a,/usr/share/vim/vim74a/vimfiles/after,~/.vim/after,~/.vim/bundle/Vundle.vim,~/.vim/bundle/vim-javascript-syntax/after,~/.vim/bundle/vim-javascript/after,~/.vim/bundle/delimitMate/after,~/.vim/bundle/syntastic/after,~/.vim/bundle/YouCompleteMe/after,~/.vim/bundle/tern_for_vim/after
 set shiftwidth=2
+set shortmess=filnxtToOc
 set sidescroll=1
-set softtabstop=2
-set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
 set tabstop=2
+set updatetime=2000
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -31,11 +41,12 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 lib/imgur.js
-badd +2 test/imgurSpec.js
+badd +1 test/imgurSpec.js
+badd +3 lib/imgur.js
+badd +1 lib/scene.js
+badd +1 test/sceneSpec.js
 badd +0 ~/zuul/bash\ -\ 1
-badd +0 lib/scene.js
-badd +0 test/sceneSpec.js
+argglobal
 silent! argdel *
 edit lib/scene.js
 set splitbelow splitright
@@ -45,33 +56,37 @@ split
 wincmd _ | wincmd |
 vsplit
 1wincmd h
-wincmd _ | wincmd |
-split
-1wincmd k
-wincmd w
-wincmd w
-wincmd _ | wincmd |
-split
-1wincmd k
 wincmd w
 wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 19 + 29) / 59)
+exe '1resize ' . ((&lines * 40 + 28) / 56)
 exe 'vert 1resize ' . ((&columns * 89 + 89) / 179)
-exe '2resize ' . ((&lines * 18 + 29) / 59)
+exe '2resize ' . ((&lines * 40 + 28) / 56)
 exe 'vert 2resize ' . ((&columns * 89 + 89) / 179)
-exe '3resize ' . ((&lines * 19 + 29) / 59)
-exe 'vert 3resize ' . ((&columns * 89 + 89) / 179)
-exe '4resize ' . ((&lines * 18 + 29) / 59)
-exe 'vert 4resize ' . ((&columns * 89 + 89) / 179)
-exe '5resize ' . ((&lines * 18 + 29) / 59)
+exe '3resize ' . ((&lines * 13 + 28) / 56)
 argglobal
-setlocal keymap=
-setlocal noarabic
+let s:cpo_save=&cpo
+set cpo&vim
+imap <buffer> <S-BS> <Plug>delimitMateS-BS
+imap <buffer> <BS> <Plug>delimitMateBS
+imap <buffer> <silent> g <Plug>delimitMateJumpMany
+imap <buffer>  <Plug>delimitMateBS
+imap <buffer> " <Plug>delimitMate"
+imap <buffer> ' <Plug>delimitMate'
+imap <buffer> ( <Plug>delimitMate(
+imap <buffer> ) <Plug>delimitMate)
+imap <buffer> [ <Plug>delimitMate[
+imap <buffer> ] <Plug>delimitMate]
+imap <buffer> ` <Plug>delimitMate`
+imap <buffer> { <Plug>delimitMate{
+imap <buffer> } <Plug>delimitMate}
+let &cpo=s:cpo_save
+unlet s:cpo_save
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -84,9 +99,7 @@ setlocal colorcolumn=
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=//%s
 setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
+setlocal completefunc=youcompleteme#Complete
 setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
@@ -115,8 +128,8 @@ setlocal formatexpr=
 setlocal formatoptions=croql
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
+setlocal iminsert=2
+setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
 setlocal indentexpr=GetJavascriptIndent()
@@ -126,28 +139,27 @@ setlocal iskeyword=@,48-57,_,192-255,$
 setlocal keywordprg=
 setlocal nolinebreak
 setlocal nolisp
+setlocal lispwords=
 setlocal nolist
 setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
-setlocal nomodeline
+setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 setlocal nonumber
 setlocal numberwidth=4
-setlocal omnifunc=javascriptcomplete#CompleteJS
+setlocal omnifunc=tern#Complete
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=2
+setlocal softtabstop=0
 setlocal nospell
 setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
@@ -164,134 +176,41 @@ setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
+setlocal undolevels=-123456
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 9) / 19)
+let s:l = 8 - ((0 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 029l
-lcd ~/zuul
-wincmd w
-argglobal
-edit ~/zuul/lib/imgur.js
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
-setlocal commentstring=//%s
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-setlocal nocursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'javascript'
-setlocal filetype=javascript
-endif
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-setlocal foldmethod=manual
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldtext=foldtext()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=GetJavascriptIndent()
-setlocal indentkeys=0{,0},0),0],0,,!^F,o,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,$
-setlocal keywordprg=
-setlocal nolinebreak
-setlocal nolisp
-setlocal nolist
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal nomodeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-setlocal nonumber
-setlocal numberwidth=4
-setlocal omnifunc=javascriptcomplete#CompleteJS
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=2
-setlocal nospell
-setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'javascript'
-setlocal syntax=javascript
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 9) / 18)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 018l
+8
+normal! 0
 lcd ~/zuul
 wincmd w
 argglobal
 edit ~/zuul/test/sceneSpec.js
-setlocal keymap=
-setlocal noarabic
+let s:cpo_save=&cpo
+set cpo&vim
+imap <buffer> <S-BS> <Plug>delimitMateS-BS
+imap <buffer> <BS> <Plug>delimitMateBS
+imap <buffer> <silent> g <Plug>delimitMateJumpMany
+imap <buffer>  <Plug>delimitMateBS
+imap <buffer> " <Plug>delimitMate"
+imap <buffer> ' <Plug>delimitMate'
+imap <buffer> ( <Plug>delimitMate(
+imap <buffer> ) <Plug>delimitMate)
+imap <buffer> [ <Plug>delimitMate[
+imap <buffer> ] <Plug>delimitMate]
+imap <buffer> ` <Plug>delimitMate`
+imap <buffer> { <Plug>delimitMate{
+imap <buffer> } <Plug>delimitMate}
+let &cpo=s:cpo_save
+unlet s:cpo_save
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -304,9 +223,7 @@ setlocal colorcolumn=
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=//%s
 setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
+setlocal completefunc=youcompleteme#Complete
 setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
@@ -335,8 +252,8 @@ setlocal formatexpr=
 setlocal formatoptions=croql
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
+setlocal iminsert=2
+setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
 setlocal indentexpr=GetJavascriptIndent()
@@ -346,28 +263,27 @@ setlocal iskeyword=@,48-57,_,192-255,$
 setlocal keywordprg=
 setlocal nolinebreak
 setlocal nolisp
+setlocal lispwords=
 setlocal nolist
 setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
-setlocal nomodeline
+setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 setlocal nonumber
 setlocal numberwidth=4
-setlocal omnifunc=javascriptcomplete#CompleteJS
+setlocal omnifunc=tern#Complete
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=2
+setlocal softtabstop=0
 setlocal nospell
 setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
@@ -384,127 +300,18 @@ setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
+setlocal undolevels=-123456
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 6 - ((5 * winheight(0) + 9) / 19)
+let s:l = 27 - ((26 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-6
-normal! 02l
-lcd ~/zuul
-wincmd w
-argglobal
-edit ~/zuul/test/imgurSpec.js
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
-setlocal commentstring=//%s
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-setlocal nocursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'javascript'
-setlocal filetype=javascript
-endif
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-setlocal foldmethod=manual
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldtext=foldtext()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=GetJavascriptIndent()
-setlocal indentkeys=0{,0},0),0],0,,!^F,o,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,$
-setlocal keywordprg=
-setlocal nolinebreak
-setlocal nolisp
-setlocal nolist
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal nomodeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-setlocal nonumber
-setlocal numberwidth=4
-setlocal omnifunc=javascriptcomplete#CompleteJS
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=2
-setlocal nospell
-setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'javascript'
-setlocal syntax=javascript
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 9) / 18)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
+27
+normal! 013|
 lcd ~/zuul
 wincmd w
 argglobal
@@ -512,8 +319,6 @@ enew
 file ~/zuul/bash\ -\ 1
 let s:cpo_save=&cpo
 set cpo&vim
-inoremap <buffer> <silent> <BS> :py ConqueTerm_1.write(u("\x08"))
-inoremap <buffer> <silent> <S-BS> :py ConqueTerm_1.write(u("\x08"))
 inoremap <buffer> <silent> <S-Space> :py ConqueTerm_1.write(u(" "))
 inoremap <buffer> <silent> <Up> :py ConqueTerm_1.write(u("\x1b[A"))
 inoremap <buffer> <silent> <Down> :py ConqueTerm_1.write(u("\x1b[B"))
@@ -521,6 +326,8 @@ inoremap <buffer> <silent> <Right> :py ConqueTerm_1.write(u("\x1b[C"))
 inoremap <buffer> <silent> <Left> :py ConqueTerm_1.write(u("\x1b[D"))
 inoremap <buffer> <silent> <Home> :py ConqueTerm_1.write(u("\x1bOH"))
 inoremap <buffer> <silent> <End> :py ConqueTerm_1.write(u("\x1bOF"))
+inoremap <buffer> <silent> <S-BS> :py ConqueTerm_1.write(u("\x08"))
+inoremap <buffer> <silent> <BS> :py ConqueTerm_1.write(u("\x08"))
 nnoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(3)
 nnoremap <buffer> <silent> C :echo "Change mode disabled in shell."
 nnoremap <buffer> <silent> P :py ConqueTerm_1.write_expr("@@")a
@@ -538,6 +345,7 @@ inoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(3)
 inoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(4)
 inoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(5)
 inoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(6)
+imap <buffer> <silent> g <Plug>delimitMateJumpMany
 inoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(7)
 inoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(8)
 inoremap <buffer> <silent> 	 :py ConqueTerm_1.write_ord(9)
@@ -661,9 +469,8 @@ inoremap <buffer> <silent> ~ :py ConqueTerm_1.write_ord(126)
 inoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(127)
 let &cpo=s:cpo_save
 unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=netrw#BalloonHelp()
 setlocal nobinary
 setlocal bufhidden=hide
 setlocal buflisted
@@ -676,8 +483,6 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=nic
-setlocal conceallevel=3
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -707,8 +512,8 @@ setlocal formatexpr=
 setlocal formatoptions=tcq
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
+setlocal iminsert=2
+setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
 setlocal indentexpr=
@@ -718,28 +523,27 @@ setlocal iskeyword=@,48-57,_,192-255
 setlocal keywordprg=
 setlocal nolinebreak
 setlocal nolisp
+setlocal lispwords=
 setlocal nolist
 setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
-setlocal nomodeline
+setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 setlocal nonumber
 setlocal numberwidth=4
-setlocal omnifunc=javascriptcomplete#CompleteJS
+setlocal omnifunc=syntaxcomplete#Complete
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=2
+setlocal softtabstop=0
 setlocal nospell
 setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
@@ -756,27 +560,23 @@ setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
+setlocal undolevels=-123456
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal nowrap
 setlocal wrapmargin=0
 wincmd w
-3wincmd w
-exe '1resize ' . ((&lines * 19 + 29) / 59)
+exe '1resize ' . ((&lines * 40 + 28) / 56)
 exe 'vert 1resize ' . ((&columns * 89 + 89) / 179)
-exe '2resize ' . ((&lines * 18 + 29) / 59)
+exe '2resize ' . ((&lines * 40 + 28) / 56)
 exe 'vert 2resize ' . ((&columns * 89 + 89) / 179)
-exe '3resize ' . ((&lines * 19 + 29) / 59)
-exe 'vert 3resize ' . ((&columns * 89 + 89) / 179)
-exe '4resize ' . ((&lines * 18 + 29) / 59)
-exe 'vert 4resize ' . ((&columns * 89 + 89) / 179)
-exe '5resize ' . ((&lines * 18 + 29) / 59)
+exe '3resize ' . ((&lines * 13 + 28) / 56)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
-set winheight=1 winwidth=20 shortmess=filnxtToO
+set winheight=1 winwidth=20 shortmess=filnxtToOc
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
