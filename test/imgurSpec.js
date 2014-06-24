@@ -16,7 +16,7 @@ describe("Imgur", function() {
 
 	describe("#upImages()", function() {
 		it("should return an array of uploaded image ids", function(done) {
-			this.timeout(200000);
+			this.timeout(500000);
 			var url = 'http://www.clevescene.com/cleveland/12-cleveland-patios-you-have-to-hit-this-summer/Slideshow?oid=4328959&slide=';
 			imgur.upImages(url, function(results){
 				expect(results).to.be.instanceOf(Array);

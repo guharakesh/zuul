@@ -2,17 +2,17 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-inoremap <expr> <Down> pumvisible() ? "\" : "\<Down>"
-inoremap <expr> <S-Tab> pumvisible() ? "\" : "\<S-Tab>"
-inoremap <expr> <Up> pumvisible() ? "\" : "\<Up>"
 inoremap <Nul> 
+inoremap <expr> <Up> pumvisible() ? "\" : "\<Up>"
+inoremap <expr> <S-Tab> pumvisible() ? "\" : "\<S-Tab>"
+inoremap <expr> <Down> pumvisible() ? "\" : "\<Down>"
 inoremap <silent> <expr> <Plug>delimitMateS-BS delimitMate#WithinEmptyPair() ? "\<Del>" : "\<S-BS>"
 inoremap <silent> <Plug>delimitMateBS =delimitMate#BS()
 nnoremap \d :YcmShowDetailedDiagnostic
 nmap gx <Plug>NetrwBrowseX
-vnoremap <silent> <F9> :call conque_term#send_selected(visualmode())
-nnoremap <silent> <F10> :call conque_term#send_file()
 nnoremap <F8> :call conque_term#set_mappings("toggle")
+nnoremap <silent> <F10> :call conque_term#send_file()
+vnoremap <silent> <F9> :call conque_term#send_selected(visualmode())
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cfile>"),0)
 nnoremap <silent> <F11> :call conque_term#exec_file()
 imap  O
@@ -32,7 +32,7 @@ set shiftwidth=2
 set shortmess=filnxtToOc
 set sidescroll=1
 set tabstop=2
-set updatetime=2000
+set updatetime=50
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -43,12 +43,12 @@ endif
 set shortmess=aoO
 badd +1 test/imgurSpec.js
 badd +3 lib/imgur.js
-badd +1 lib/scene.js
-badd +1 test/sceneSpec.js
+badd +44 lib/scene.js
+badd +27 test/sceneSpec.js
 badd +0 ~/zuul/bash\ -\ 1
 argglobal
 silent! argdel *
-edit lib/scene.js
+edit lib/imgur.js
 set splitbelow splitright
 wincmd _ | wincmd |
 split
@@ -62,11 +62,11 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 40 + 28) / 56)
+exe '1resize ' . ((&lines * 42 + 29) / 58)
 exe 'vert 1resize ' . ((&columns * 89 + 89) / 179)
-exe '2resize ' . ((&lines * 40 + 28) / 56)
+exe '2resize ' . ((&lines * 42 + 29) / 58)
 exe 'vert 2resize ' . ((&columns * 89 + 89) / 179)
-exe '3resize ' . ((&lines * 13 + 28) / 56)
+exe '3resize ' . ((&lines * 13 + 29) / 58)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
@@ -182,16 +182,16 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 8 - ((0 * winheight(0) + 20) / 40)
+let s:l = 43 - ((41 * winheight(0) + 21) / 42)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-8
+43
 normal! 0
 lcd ~/zuul
 wincmd w
 argglobal
-edit ~/zuul/test/sceneSpec.js
+edit ~/zuul/test/imgurSpec.js
 let s:cpo_save=&cpo
 set cpo&vim
 imap <buffer> <S-BS> <Plug>delimitMateS-BS
@@ -306,12 +306,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 27 - ((26 * winheight(0) + 20) / 40)
+let s:l = 12 - ((11 * winheight(0) + 21) / 42)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-27
-normal! 013|
+12
+normal! 0
 lcd ~/zuul
 wincmd w
 argglobal
@@ -319,13 +319,13 @@ enew
 file ~/zuul/bash\ -\ 1
 let s:cpo_save=&cpo
 set cpo&vim
-inoremap <buffer> <silent> <S-Space> :py ConqueTerm_1.write(u(" "))
-inoremap <buffer> <silent> <Up> :py ConqueTerm_1.write(u("\x1b[A"))
-inoremap <buffer> <silent> <Down> :py ConqueTerm_1.write(u("\x1b[B"))
-inoremap <buffer> <silent> <Right> :py ConqueTerm_1.write(u("\x1b[C"))
-inoremap <buffer> <silent> <Left> :py ConqueTerm_1.write(u("\x1b[D"))
-inoremap <buffer> <silent> <Home> :py ConqueTerm_1.write(u("\x1bOH"))
 inoremap <buffer> <silent> <End> :py ConqueTerm_1.write(u("\x1bOF"))
+inoremap <buffer> <silent> <Home> :py ConqueTerm_1.write(u("\x1bOH"))
+inoremap <buffer> <silent> <Left> :py ConqueTerm_1.write(u("\x1b[D"))
+inoremap <buffer> <silent> <Right> :py ConqueTerm_1.write(u("\x1b[C"))
+inoremap <buffer> <silent> <Down> :py ConqueTerm_1.write(u("\x1b[B"))
+inoremap <buffer> <silent> <Up> :py ConqueTerm_1.write(u("\x1b[A"))
+inoremap <buffer> <silent> <S-Space> :py ConqueTerm_1.write(u(" "))
 inoremap <buffer> <silent> <S-BS> :py ConqueTerm_1.write(u("\x08"))
 inoremap <buffer> <silent> <BS> :py ConqueTerm_1.write(u("\x08"))
 nnoremap <buffer> <silent>  :py ConqueTerm_1.write_ord(3)
@@ -566,11 +566,12 @@ setlocal nowinfixwidth
 setlocal nowrap
 setlocal wrapmargin=0
 wincmd w
-exe '1resize ' . ((&lines * 40 + 28) / 56)
+3wincmd w
+exe '1resize ' . ((&lines * 42 + 29) / 58)
 exe 'vert 1resize ' . ((&columns * 89 + 89) / 179)
-exe '2resize ' . ((&lines * 40 + 28) / 56)
+exe '2resize ' . ((&lines * 42 + 29) / 58)
 exe 'vert 2resize ' . ((&columns * 89 + 89) / 179)
-exe '3resize ' . ((&lines * 13 + 28) / 56)
+exe '3resize ' . ((&lines * 13 + 29) / 58)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
