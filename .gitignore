@@ -3,3 +3,6 @@
 
 # npm log file
 npm-debug.log
+
+# ignore node modules folder
+node_modules
