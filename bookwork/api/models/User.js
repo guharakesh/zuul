@@ -18,6 +18,16 @@ module.exports = {
       type: 'string',
       required: true
     },
+    admin:{
+      type: 'boolean',
+      required: true,
+      defaultsTo: false
+    },
+    type :{
+      type: 'string',
+      in: ['student','employer'],
+      required: true
+    },
 
     //Override toJSON method to remove password from API
     toJSON: function() {

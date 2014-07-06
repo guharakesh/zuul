@@ -31,7 +31,7 @@ module.exports = {
       req.logIn(user, function(err){
         if (err) res.redirect('/login');console.log("error");
         console.log(user," logged in")
-        return res.redirect('/');
+        return res.redirect('/user');
       });
     })(req, res);
   },
