@@ -1,7 +1,13 @@
 var passport    = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
-  bcrypt = require('bcrypt');
+  bcrypt        = require('bcrypt');
 
+
+// Passport session setup.
+// To support persistent login sessions, Passport needs to be able to
+// serialize users into and deserialize users out of the session. Typically,
+// this will be as simple as storing the user ID when serializing, and finding
+// the user by ID when deserializing.
 passport.serializeUser(function(user, done) {
   done(null, user[0].id);
 });

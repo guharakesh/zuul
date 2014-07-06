@@ -21,11 +21,10 @@ module.exports = {
     res.view("auth/login");
   },
   process: function(req,res){
-  	console.log("trying to authenticate:")
     passport.authenticate('local', function(err, user, info){
       if ((err) || (!user)) {
         res.redirect('/login');
-      	console.log(err,user,info);
+        console.log(err,user,info);
         console.log("failed!")
         return;
       }
